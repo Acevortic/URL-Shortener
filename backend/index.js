@@ -1,11 +1,17 @@
 import express from "express";
 import mongoose from "mongoose";
+import cors from "cors";
 import { nanoid } from "nanoid";
 import { config } from "dotenv";
 
 const app = express();
 const PORT = process.env.PORT || 8000;
 app.use(express.json());
+
+// Enable CORS
+app.use(cors({
+    origin: "http://localhost:3000" // Allow requests from React frontend
+}));
 
 config();
 
@@ -20,8 +26,22 @@ const urlSchema = new mongoose.Schema( {
 
 const url = mongoose.model("URL", urlSchema);
 
+function isValidUrl(url) {
+    try {
+        new URL(url);
+        return true;
+    } catch (err) {
+        return false;
+    }
+}
+
 app.post("/shorten", async (req, res) => {
     const originalUrl = req.body.originalUrl;
+
+    if (!isValidUrl(originalUrl)) {
+        return res.status(400).json({ error: "Invalid URL format" });
+    }
+    
     const shortid = nanoid(6);
     const newURL = await url.create({originalUrl, shortid, clicks: []});
     res.json({shortUrl: `http://localhost:${PORT}/${shortid}`});
