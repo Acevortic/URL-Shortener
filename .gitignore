@@ -1,0 +1,10 @@
+# .gitignore
+
+# Ignore the .env file containing sensitive data
+.env
+
+# Ignore Python virtual environment folder
+.venv/
+
+# Ignore node_modules folder
+node_modules/
