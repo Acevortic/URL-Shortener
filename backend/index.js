@@ -42,7 +42,7 @@ app.get("/:shortid", async (req, res) => {
     res.redirect(urlEntry.originalUrl);
 });
 
-app.get("/analytics:shortid", async (req, res) => {
+app.get("/analytics/:shortid", async (req, res) => {
     const urlEntry = await url.findOne({shortid: req.params.shortid });
 
     if (!urlEntry) return res.status(404).json({error: "Not found"});
